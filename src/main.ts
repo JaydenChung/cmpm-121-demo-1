@@ -29,6 +29,11 @@ upgradeButton.classList.add("upgradeButton");
 upgradeButton.disabled = true; // Initially disabled until the player has enough presses
 app.append(upgradeButton);
 
+// Create a counter display for auto-presses owned
+const autoPressCountDisplay = document.createElement("p");
+let autoPressCount = 0;
+autoPressCountDisplay.innerHTML = `Auto-Presses owned: ${autoPressCount}`;
+app.append(autoPressCountDisplay);
 
 // Function to check if the upgrade can be purchased
 function checkUpgradeAvailability() {
@@ -50,8 +55,9 @@ button.addEventListener("click", () => {
 upgradeButton.addEventListener("click", () => {
   if (pressCount >= 10) {
     pressCount -= 10; // Deduct the cost of the upgrade
-    
+    autoPressCount++;
     Count.innerHTML = `Button pressed: ${pressCount}`;
+    autoPressCountDisplay.innerHTML = `Auto-Presses owned: ${autoPressCount}`;
 
     checkUpgradeAvailability(); // Check again if the button needs to be disabled
 
