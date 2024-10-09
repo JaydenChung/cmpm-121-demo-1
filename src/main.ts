@@ -15,5 +15,3 @@ const button = document.createElement("button");
 button.innerHTML = "Press Me!";
 button.classList.add("myButton");
 app.append(button);
-
-
