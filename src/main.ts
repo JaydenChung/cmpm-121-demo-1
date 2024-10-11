@@ -2,7 +2,7 @@ import "./style.css";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 
-const gameName = "My amazing game";
+const gameName = "Crystal Miner";
 document.title = gameName;
 
 // Create a header
@@ -10,108 +10,106 @@ const header = document.createElement("h1");
 header.innerHTML = gameName;
 app.append(header);
 
-// Create a button for manual presses
+// Create a button
 const button = document.createElement("button");
-button.innerHTML = "Press Me!";
+button.innerHTML = "Mine Crystal!";
 button.classList.add("myButton");
+
+// Append the button to the app container
 app.append(button);
 
-// Create a counter display for button presses
-const Count = document.createElement("p");
-let pressCount = 0;
-Count.innerHTML = `Button pressed: ${pressCount}`;
-app.append(Count);
+const countDisplay = document.createElement("p");
+let crystalCount = 0;
+countDisplay.innerHTML = `Crystals: ${crystalCount}`;
+app.append(countDisplay);
 
-// Create a counter display for income per second
+// Create buttons for upgrades: A, B, C
+const aButton = document.createElement("button");
+aButton.innerHTML = "Buy Pickaxe (Costs 10 crystals, Provides 0.1 crystals/sec)";
+aButton.disabled = true;
+app.append(aButton);
+
+const bButton = document.createElement("button");
+bButton.innerHTML = "Buy Drill (Costs 100 crystals, Provides 2.0 crystals/sec)";
+bButton.disabled = true;
+app.append(bButton);
+
+const cButton = document.createElement("button");
+cButton.innerHTML = "Buy Excavator (Costs 1000 crystals, Provides 50 crystals/sec)";
+cButton.disabled = true;
+app.append(cButton);
+
+// Create a display for the current income rate
 const incomeDisplay = document.createElement("p");
 let incomePerSecond = 0;
-incomeDisplay.innerHTML = `Income per second: ${incomePerSecond.toFixed(1)} units/sec`;
+incomeDisplay.innerHTML = `Crystals per second: ${incomePerSecond.toFixed(1)}`;
 app.append(incomeDisplay);
 
-// Create upgrade buttons for items A, B, and C
-const upgradeAButton = document.createElement("button");
-upgradeAButton.innerHTML = "Buy A (Costs 5 units, Provides 0.1 units/sec)";
-upgradeAButton.classList.add("upgradeButton");
-upgradeAButton.disabled = true;
-app.append(upgradeAButton);
+// Create a display for upgrades owned
+const upgradesOwned = document.createElement("p");
+upgradesOwned.innerHTML = `Upgrades owned: Pickaxes: 0, Drills: 0, Excavators: 0`;
+app.append(upgradesOwned);
 
-const upgradeBButton = document.createElement("button");
-upgradeBButton.innerHTML = "Buy B (Costs 50 units, Provides 2.0 units/sec)";
-upgradeBButton.classList.add("upgradeButton");
-upgradeBButton.disabled = true;
-app.append(upgradeBButton);
-
-const upgradeCButton = document.createElement("button");
-upgradeCButton.innerHTML = "Buy C (Costs 500 units, Provides 50 units/sec)";
-upgradeCButton.classList.add("upgradeButton");
-upgradeCButton.disabled = true;
-app.append(upgradeCButton);
-
-// Create a status display for items owned
-const statusDisplay = document.createElement("p");
-statusDisplay.innerHTML = `Upgrades owned: A: 0, B: 0, C: 0`;
-app.append(statusDisplay);
-
-// Upgrade cost and rate definitions with initial prices
+// Define the upgrade costs and properties
 const upgrades = {
-  A: { baseCost: 5, currentCost: 5, income: 0.1, owned: 0 },
-  B: { baseCost: 50, currentCost: 50, income: 2.0, owned: 0 },
-  C: { baseCost: 500, currentCost: 500, income: 50.0, owned: 0 },
+  A: { baseCost: 10, currentCost: 10, income: 0.1, owned: 0 },
+  B: { baseCost: 100, currentCost: 100, income: 2.0, owned: 0 },
+  C: { baseCost: 1000, currentCost: 1000, income: 50.0, owned: 0 }
 };
 
-// Price multiplier factor
+// Price multiplier for increased costs
 const priceMultiplier = 1.15;
 
-// Add an event listener for the main press button
+// Button click event to mine crystals manually
 button.addEventListener("click", () => {
-  pressCount++;
-  Count.innerHTML = `Button pressed: ${pressCount}`;
-  checkUpgradeAvailability(); // Check if any upgrade buttons should be enabled
+  crystalCount++;
+  countDisplay.innerHTML = `Crystals: ${crystalCount}`;
+  checkUpgradeAvailability();  // Check if upgrades are affordable
 });
 
 // Function to check if upgrades can be purchased
 function checkUpgradeAvailability() {
-  upgradeAButton.disabled = pressCount < upgrades.A.currentCost;
-  upgradeBButton.disabled = pressCount < upgrades.B.currentCost;
-  upgradeCButton.disabled = pressCount < upgrades.C.currentCost;
+  aButton.disabled = crystalCount < upgrades.A.currentCost;
+  bButton.disabled = crystalCount < upgrades.B.currentCost;
+  cButton.disabled = crystalCount < upgrades.C.currentCost;
 
-  // Update button text to show current costs
-  upgradeAButton.innerHTML = `Buy A (Costs ${upgrades.A.currentCost.toFixed(2)} units, Provides 0.1 units/sec)`;
-  upgradeBButton.innerHTML = `Buy B (Costs ${upgrades.B.currentCost.toFixed(2)} units, Provides 2.0 units/sec)`;
-  upgradeCButton.innerHTML = `Buy C (Costs ${upgrades.C.currentCost.toFixed(2)} units, Provides 50 units/sec)`;
+  // Update the button text to reflect current costs
+  aButton.innerHTML = `Buy Pickaxe (Costs ${upgrades.A.currentCost.toFixed(2)} crystals, Provides 0.1 crystals/sec)`;
+  bButton.innerHTML = `Buy Drill (Costs ${upgrades.B.currentCost.toFixed(2)} crystals, Provides 2.0 crystals/sec)`;
+  cButton.innerHTML = `Buy Excavator (Costs ${upgrades.C.currentCost.toFixed(2)} crystals, Provides 50 crystals/sec)`;
 }
 
 // Function to update the status display
 function updateStatusDisplay() {
-  statusDisplay.innerHTML = `Upgrades owned: A: ${upgrades.A.owned}, B: ${upgrades.B.owned}, C: ${upgrades.C.owned}`;
-  incomeDisplay.innerHTML = `Income per second: ${incomePerSecond.toFixed(1)} units/sec`;
+  upgradesOwned.innerHTML = `Upgrades owned: Pickaxes: ${upgrades.A.owned}, Drills: ${upgrades.B.owned}, Excavators: ${upgrades.C.owned}`;
+  incomeDisplay.innerHTML = `Crystals per second: ${incomePerSecond.toFixed(1)}`;
 }
 
 // Function to handle purchasing an upgrade
 function purchaseUpgrade(upgrade: keyof typeof upgrades) {
   const upgradeData = upgrades[upgrade];
-  if (pressCount >= upgradeData.currentCost) {
-    pressCount -= upgradeData.currentCost;
+  if (crystalCount >= upgradeData.currentCost) {
+    crystalCount -= upgradeData.currentCost;
     incomePerSecond += upgradeData.income;
-    upgradeData.owned++; // Increase the number of owned upgrades
-    Count.innerHTML = `Button pressed: ${pressCount}`;
-
-    // Increase the cost of the upgrade for the next purchase
+    upgradeData.owned++;
+    countDisplay.innerHTML = `Crystals: ${crystalCount}`;
+    
+    // Increase the cost for the next purchase
     upgradeData.currentCost *= priceMultiplier;
-
-    updateStatusDisplay(); // Update status display for owned items and income
+    
+    updateStatusDisplay();
     checkUpgradeAvailability();
   }
 }
 
-// Add event listeners for upgrade buttons
-upgradeAButton.addEventListener("click", () => purchaseUpgrade("A"));
-upgradeBButton.addEventListener("click", () => purchaseUpgrade("B"));
-upgradeCButton.addEventListener("click", () => purchaseUpgrade("C"));
+// Add event listeners to upgrade buttons
+aButton.addEventListener("click", () => purchaseUpgrade('A'));
+bButton.addEventListener("click", () => purchaseUpgrade('B'));
+cButton.addEventListener("click", () => purchaseUpgrade('C'));
 
-// Start auto-income generation
+// Automatically increment crystals per second
 setInterval(() => {
-  pressCount += incomePerSecond;
-  Count.innerHTML = `Button pressed: ${pressCount.toFixed(1)}`;
+  crystalCount += incomePerSecond;
+  countDisplay.innerHTML = `Crystals: ${crystalCount.toFixed(1)}`;
   checkUpgradeAvailability();
-}, 1000); // Increment every second based on income per second
+}, 1000);  // Runs every second to add income
