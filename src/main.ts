@@ -25,7 +25,8 @@ app.append(countDisplay);
 
 // Create buttons for upgrades: A, B, C
 const aButton = document.createElement("button");
-aButton.innerHTML = "Buy Pickaxe (Costs 10 crystals, Provides 0.1 crystals/sec)";
+aButton.innerHTML =
+  "Buy Pickaxe (Costs 10 crystals, Provides 0.1 crystals/sec)";
 aButton.disabled = true;
 app.append(aButton);
 
@@ -35,7 +36,8 @@ bButton.disabled = true;
 app.append(bButton);
 
 const cButton = document.createElement("button");
-cButton.innerHTML = "Buy Excavator (Costs 1000 crystals, Provides 50 crystals/sec)";
+cButton.innerHTML =
+  "Buy Excavator (Costs 1000 crystals, Provides 50 crystals/sec)";
 cButton.disabled = true;
 app.append(cButton);
 
@@ -54,7 +56,7 @@ app.append(upgradesOwned);
 const upgrades = {
   A: { baseCost: 10, currentCost: 10, income: 0.1, owned: 0 },
   B: { baseCost: 100, currentCost: 100, income: 2.0, owned: 0 },
-  C: { baseCost: 1000, currentCost: 1000, income: 50.0, owned: 0 }
+  C: { baseCost: 1000, currentCost: 1000, income: 50.0, owned: 0 },
 };
 
 // Price multiplier for increased costs
@@ -64,7 +66,7 @@ const priceMultiplier = 1.15;
 button.addEventListener("click", () => {
   crystalCount++;
   countDisplay.innerHTML = `Crystals: ${crystalCount}`;
-  checkUpgradeAvailability();  // Check if upgrades are affordable
+  checkUpgradeAvailability(); // Check if upgrades are affordable
 });
 
 // Function to check if upgrades can be purchased
@@ -93,23 +95,23 @@ function purchaseUpgrade(upgrade: keyof typeof upgrades) {
     incomePerSecond += upgradeData.income;
     upgradeData.owned++;
     countDisplay.innerHTML = `Crystals: ${crystalCount}`;
-    
+
     // Increase the cost for the next purchase
     upgradeData.currentCost *= priceMultiplier;
-    
+
     updateStatusDisplay();
     checkUpgradeAvailability();
   }
 }
 
 // Add event listeners to upgrade buttons
-aButton.addEventListener("click", () => purchaseUpgrade('A'));
-bButton.addEventListener("click", () => purchaseUpgrade('B'));
-cButton.addEventListener("click", () => purchaseUpgrade('C'));
+aButton.addEventListener("click", () => purchaseUpgrade("A"));
+bButton.addEventListener("click", () => purchaseUpgrade("B"));
+cButton.addEventListener("click", () => purchaseUpgrade("C"));
 
 // Automatically increment crystals per second
 setInterval(() => {
   crystalCount += incomePerSecond;
   countDisplay.innerHTML = `Crystals: ${crystalCount.toFixed(1)}`;
   checkUpgradeAvailability();
-}, 1000);  // Runs every second to add income
+}, 1000); // Runs every second to add income
