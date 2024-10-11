@@ -1,18 +1,21 @@
 import "./style.css";
 
-// Item interface (added 'owned' property)
+// Item interface (added 'owned' and 'description' properties)
 interface Item {
   name: string,
   cost: number,
   rate: number,
-  owned: number // Tracks how many of each item the player owns
+  owned: number,  // Tracks how many of each item the player owns
+  description: string // Fun description of the item
 };
 
-// Available items (Pickaxe, Drill, Excavator)
+// Available items with names, costs, rates, and descriptions
 const availableItems: Item[] = [
-  { name: "Pickaxe", cost: 10, rate: 0.1, owned: 0 },
-  { name: "Drill", cost: 100, rate: 2, owned: 0 },
-  { name: "Excavator", cost: 1000, rate: 50, owned: 0 },
+  { name: "Pickaxe", cost: 10, rate: 0.1, owned: 0, description: "A basic tool for mining crystals." },
+  { name: "Drill", cost: 100, rate: 2, owned: 0, description: "A powerful drill that mines crystals faster." },
+  { name: "Excavator", cost: 1000, rate: 50, owned: 0, description: "An industrial excavator for mass crystal extraction." },
+  { name: "Laser Miner", cost: 5000, rate: 200, owned: 0, description: "A high-tech laser that slices through crystal deposits like butter." },
+  { name: "Quantum Digger", cost: 20000, rate: 1000, owned: 0, description: "A futuristic tool that warps space-time to extract crystals instantly." },
 ];
 
 // Price multiplier for increasing cost
@@ -47,13 +50,13 @@ app.append(incomeDisplay);
 
 // Create a display for upgrades owned
 const upgradesOwned = document.createElement("p");
-upgradesOwned.innerHTML = `Upgrades owned: Pickaxes: 0, Drills: 0, Excavators: 0`;
+upgradesOwned.innerHTML = `Upgrades owned: Pickaxes: 0, Drills: 0, Excavators: 0, Laser Miners: 0, Quantum Diggers: 0`;
 app.append(upgradesOwned);
 
 // Create upgrade buttons dynamically based on availableItems
 availableItems.forEach((item, index) => {
   const upgradeButton = document.createElement("button");
-  upgradeButton.innerHTML = `Buy ${item.name} (Costs ${item.cost} crystals, Provides ${item.rate} crystals/sec)`;
+  upgradeButton.innerHTML = `Buy ${item.name} (Costs ${item.cost} crystals, Provides ${item.rate} crystals/sec) - ${item.description}`;
   upgradeButton.disabled = true;
   upgradeButton.id = `upgrade-${index}`;
   app.append(upgradeButton);
@@ -68,13 +71,13 @@ function checkUpgradeAvailability() {
     } else {
       upgradeButton.disabled = true;
     }
-    upgradeButton.innerHTML = `Buy ${item.name} (Costs ${item.cost.toFixed(2)} crystals, Provides ${item.rate} crystals/sec)`;
+    upgradeButton.innerHTML = `Buy ${item.name} (Costs ${item.cost.toFixed(2)} crystals, Provides ${item.rate} crystals/sec) - ${item.description}`;
   });
 }
 
 // Function to update the status display
 function updateStatusDisplay() {
-  upgradesOwned.innerHTML = `Upgrades owned: Pickaxes: ${availableItems[0].owned}, Drills: ${availableItems[1].owned}, Excavators: ${availableItems[2].owned}`;
+  upgradesOwned.innerHTML = `Upgrades owned: Pickaxes: ${availableItems[0].owned}, Drills: ${availableItems[1].owned}, Excavators: ${availableItems[2].owned}, Laser Miners: ${availableItems[3].owned}, Quantum Diggers: ${availableItems[4].owned}`;
   incomeDisplay.innerHTML = `Crystals per second: ${incomePerSecond.toFixed(1)}`;
 }
 
