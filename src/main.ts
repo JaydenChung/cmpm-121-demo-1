@@ -51,7 +51,7 @@ app.append(upgradeCButton);
 const upgrades = {
   A: { cost: 10, income: 0.1 },
   B: { cost: 100, income: 2.0 },
-  C: { cost: 1000, income: 50.0 }
+  C: { cost: 1000, income: 50.0 },
 };
 
 // Add an event listener for the main press button
@@ -81,13 +81,13 @@ function purchaseUpgrade(upgrade: keyof typeof upgrades) {
 }
 
 // Add event listeners for upgrade buttons
-upgradeAButton.addEventListener("click", () => purchaseUpgrade('A'));
-upgradeBButton.addEventListener("click", () => purchaseUpgrade('B'));
-upgradeCButton.addEventListener("click", () => purchaseUpgrade('C'));
+upgradeAButton.addEventListener("click", () => purchaseUpgrade("A"));
+upgradeBButton.addEventListener("click", () => purchaseUpgrade("B"));
+upgradeCButton.addEventListener("click", () => purchaseUpgrade("C"));
 
 // Start auto-income generation
 setInterval(() => {
   pressCount += incomePerSecond;
   Count.innerHTML = `Button pressed: ${pressCount.toFixed(1)}`;
   checkUpgradeAvailability();
-}, 1000);  // Increment every second based on income per second
+}, 1000); // Increment every second based on income per second
