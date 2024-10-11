@@ -2,20 +2,52 @@ import "./style.css";
 
 // Item interface (added 'owned' and 'description' properties)
 interface Item {
-  name: string,
-  cost: number,
-  rate: number,
-  owned: number,  // Tracks how many of each item the player owns
-  description: string // Fun description of the item
-};
+  name: string;
+  cost: number;
+  rate: number;
+  owned: number; // Tracks how many of each item the player owns
+  description: string; // Fun description of the item
+}
 
 // Available items with names, costs, rates, and descriptions
 const availableItems: Item[] = [
-  { name: "Pickaxe", cost: 10, rate: 0.1, owned: 0, description: "A basic tool for mining crystals." },
-  { name: "Drill", cost: 100, rate: 2, owned: 0, description: "A powerful drill that mines crystals faster." },
-  { name: "Excavator", cost: 1000, rate: 50, owned: 0, description: "An industrial excavator for mass crystal extraction." },
-  { name: "Laser Miner", cost: 5000, rate: 200, owned: 0, description: "A high-tech laser that slices through crystal deposits like butter." },
-  { name: "Quantum Digger", cost: 20000, rate: 1000, owned: 0, description: "A futuristic tool that warps space-time to extract crystals instantly." },
+  {
+    name: "Pickaxe",
+    cost: 10,
+    rate: 0.1,
+    owned: 0,
+    description: "A basic tool for mining crystals.",
+  },
+  {
+    name: "Drill",
+    cost: 100,
+    rate: 2,
+    owned: 0,
+    description: "A powerful drill that mines crystals faster.",
+  },
+  {
+    name: "Excavator",
+    cost: 1000,
+    rate: 50,
+    owned: 0,
+    description: "An industrial excavator for mass crystal extraction.",
+  },
+  {
+    name: "Laser Miner",
+    cost: 5000,
+    rate: 200,
+    owned: 0,
+    description:
+      "A high-tech laser that slices through crystal deposits like butter.",
+  },
+  {
+    name: "Quantum Digger",
+    cost: 20000,
+    rate: 1000,
+    owned: 0,
+    description:
+      "A futuristic tool that warps space-time to extract crystals instantly.",
+  },
 ];
 
 // Price multiplier for increasing cost
@@ -65,7 +97,9 @@ availableItems.forEach((item, index) => {
 // Function to check if upgrades can be purchased
 function checkUpgradeAvailability() {
   availableItems.forEach((item, index) => {
-    const upgradeButton = document.getElementById(`upgrade-${index}`) as HTMLButtonElement;
+    const upgradeButton = document.getElementById(
+      `upgrade-${index}`,
+    ) as HTMLButtonElement;
     if (crystalCount >= item.cost) {
       upgradeButton.disabled = false;
     } else {
@@ -94,7 +128,7 @@ function purchaseUpgrade(index: number) {
   if (crystalCount >= item.cost) {
     crystalCount -= item.cost;
     incomePerSecond += item.rate;
-    item.cost *= priceMultiplier;  // Increase cost after each purchase
+    item.cost *= priceMultiplier; // Increase cost after each purchase
     item.owned++; // Track number of items owned
     countDisplay.innerHTML = `Crystals: ${crystalCount}`;
     updateStatusDisplay();
@@ -104,7 +138,9 @@ function purchaseUpgrade(index: number) {
 
 // Add event listeners for the upgrade buttons
 availableItems.forEach((_, index) => {
-  const upgradeButton = document.getElementById(`upgrade-${index}`) as HTMLButtonElement;
+  const upgradeButton = document.getElementById(
+    `upgrade-${index}`,
+  ) as HTMLButtonElement;
   upgradeButton.addEventListener("click", () => purchaseUpgrade(index));
 });
 
@@ -113,4 +149,4 @@ setInterval(() => {
   crystalCount += incomePerSecond;
   countDisplay.innerHTML = `Crystals: ${crystalCount.toFixed(1)}`;
   checkUpgradeAvailability();
-}, 1000);  // Runs every second to add income
+}, 1000); // Runs every second to add income
