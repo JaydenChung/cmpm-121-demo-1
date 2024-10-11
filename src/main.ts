@@ -56,7 +56,7 @@ app.append(statusDisplay);
 const upgrades = {
   A: { baseCost: 5, currentCost: 5, income: 0.1, owned: 0 },
   B: { baseCost: 50, currentCost: 50, income: 2.0, owned: 0 },
-  C: { baseCost: 500, currentCost: 500, income: 50.0, owned: 0 }
+  C: { baseCost: 500, currentCost: 500, income: 50.0, owned: 0 },
 };
 
 // Price multiplier factor
@@ -95,23 +95,23 @@ function purchaseUpgrade(upgrade: keyof typeof upgrades) {
     incomePerSecond += upgradeData.income;
     upgradeData.owned++; // Increase the number of owned upgrades
     Count.innerHTML = `Button pressed: ${pressCount}`;
-    
+
     // Increase the cost of the upgrade for the next purchase
     upgradeData.currentCost *= priceMultiplier;
-    
+
     updateStatusDisplay(); // Update status display for owned items and income
     checkUpgradeAvailability();
   }
 }
 
 // Add event listeners for upgrade buttons
-upgradeAButton.addEventListener("click", () => purchaseUpgrade('A'));
-upgradeBButton.addEventListener("click", () => purchaseUpgrade('B'));
-upgradeCButton.addEventListener("click", () => purchaseUpgrade('C'));
+upgradeAButton.addEventListener("click", () => purchaseUpgrade("A"));
+upgradeBButton.addEventListener("click", () => purchaseUpgrade("B"));
+upgradeCButton.addEventListener("click", () => purchaseUpgrade("C"));
 
 // Start auto-income generation
 setInterval(() => {
   pressCount += incomePerSecond;
   Count.innerHTML = `Button pressed: ${pressCount.toFixed(1)}`;
   checkUpgradeAvailability();
-}, 1000);  // Increment every second based on income per second
+}, 1000); // Increment every second based on income per second
