@@ -11,142 +11,135 @@ interface Item {
 
 // Available items with names, costs, rates, and descriptions
 const availableItems: Item[] = [
-  {
-    name: "Pickaxe",
-    cost: 10,
-    rate: 0.1,
-    owned: 0,
-    description: "A basic tool for mining crystals.",
-  },
-  {
-    name: "Drill",
-    cost: 100,
-    rate: 2,
-    owned: 0,
-    description: "A powerful drill that mines crystals faster.",
-  },
-  {
-    name: "Excavator",
-    cost: 1000,
-    rate: 50,
-    owned: 0,
-    description: "An industrial excavator for mass crystal extraction.",
-  },
-  {
-    name: "Laser Miner",
-    cost: 5000,
-    rate: 200,
-    owned: 0,
-    description:
-      "A high-tech laser that slices through crystal deposits like butter.",
-  },
-  {
-    name: "Quantum Digger",
-    cost: 20000,
-    rate: 1000,
-    owned: 0,
-    description:
-      "A futuristic tool that warps space-time to extract crystals instantly.",
-  },
+  { name: "Pickaxe", cost: 10, rate: 0.1, owned: 0, description: "A basic tool for mining crystals." },
+  { name: "Drill", cost: 100, rate: 2, owned: 0, description: "A powerful drill that mines crystals faster." },
+  { name: "Excavator", cost: 1000, rate: 50, owned: 0, description: "An industrial excavator for mass crystal extraction." },
+  { name: "Laser Miner", cost: 5000, rate: 200, owned: 0, description: "A high-tech laser that slices through crystal deposits like butter." },
+  { name: "Quantum Digger", cost: 20000, rate: 1000, owned: 0, description: "A futuristic tool that warps space-time to extract crystals instantly." }
 ];
 
-// Price multiplier for increasing cost
-const priceMultiplier = 1.15;
+// Constants
+const PRICE_MULTIPLIER = 1.15;
 
+// DOM elements
 const app: HTMLDivElement = document.querySelector("#app")!;
+const countDisplay = createDisplayElement("Crystals: 0");
+const incomeDisplay = createDisplayElement("Crystals per second: 0.0");
+const upgradesOwned = createDisplayElement(`Upgrades owned: ${generateOwnedString()}`);
 
-const gameName = "Crystal Miner";
-document.title = gameName;
-
-// Create a header
-const header = document.createElement("h1");
-header.innerHTML = gameName;
-app.append(header);
-
-// Create a button
-const button = document.createElement("button");
-button.innerHTML = "Mine Crystal!";
-button.classList.add("myButton");
-app.append(button);
-
-const countDisplay = document.createElement("p");
+// Game variables
 let crystalCount = 0;
-countDisplay.innerHTML = `Crystals: ${crystalCount}`;
-app.append(countDisplay);
-
-// Create a display for the current income rate
-const incomeDisplay = document.createElement("p");
 let incomePerSecond = 0;
-incomeDisplay.innerHTML = `Crystals per second: ${incomePerSecond.toFixed(1)}`;
-app.append(incomeDisplay);
 
-// Create a display for upgrades owned
-const upgradesOwned = document.createElement("p");
-upgradesOwned.innerHTML = `Upgrades owned: Pickaxes: 0, Drills: 0, Excavators: 0, Laser Miners: 0, Quantum Diggers: 0`;
-app.append(upgradesOwned);
+// Initialize game UI
+initializeUI();
 
-// Create upgrade buttons dynamically based on availableItems
-availableItems.forEach((item, index) => {
-  const upgradeButton = document.createElement("button");
-  upgradeButton.innerHTML = `Buy ${item.name} (Costs ${item.cost} crystals, Provides ${item.rate} crystals/sec) - ${item.description}`;
-  upgradeButton.disabled = true;
-  upgradeButton.id = `upgrade-${index}`;
-  app.append(upgradeButton);
-});
+function initializeUI() {
+  document.title = "Crystal Miner";
+  createHeader("Crystal Miner");
 
-// Function to check if upgrades can be purchased
-function checkUpgradeAvailability() {
+  // Create and append the main mining button
+  const mineButton = createButton("Mine Crystal!", handleMineCrystalClick, "myButton");
+  app.append(mineButton);
+
+  app.append(countDisplay, incomeDisplay, upgradesOwned);
+  createUpgradeButtons();
+  setInterval(updateCrystals, 1000); // Runs every second to add income
+}
+
+// Function to handle the crystal mining button click
+function handleMineCrystalClick() {
+  crystalCount++;
+  updateCountDisplay();
+  checkUpgradeAvailability();
+}
+
+// Function to dynamically create upgrade buttons
+function createUpgradeButtons() {
   availableItems.forEach((item, index) => {
-    const upgradeButton = document.getElementById(
-      `upgrade-${index}`,
-    ) as HTMLButtonElement;
-    if (crystalCount >= item.cost) {
-      upgradeButton.disabled = false;
-    } else {
-      upgradeButton.disabled = true;
-    }
-    upgradeButton.innerHTML = `Buy ${item.name} (Costs ${item.cost.toFixed(2)} crystals, Provides ${item.rate} crystals/sec) - ${item.description}`;
+    const button = createButton(
+      `Buy ${item.name} (Costs ${item.cost} crystals, Provides ${item.rate} crystals/sec) - ${item.description}`,
+      () => purchaseUpgrade(index)
+    );
+    button.id = `upgrade-${index}`;
+    button.disabled = true;
+    app.append(button);
   });
 }
 
-// Function to update the status display
-function updateStatusDisplay() {
-  upgradesOwned.innerHTML = `Upgrades owned: Pickaxes: ${availableItems[0].owned}, Drills: ${availableItems[1].owned}, Excavators: ${availableItems[2].owned}, Laser Miners: ${availableItems[3].owned}, Quantum Diggers: ${availableItems[4].owned}`;
-  incomeDisplay.innerHTML = `Crystals per second: ${incomePerSecond.toFixed(1)}`;
+// Check if upgrades can be purchased
+function checkUpgradeAvailability() {
+  availableItems.forEach((item, index) => {
+    const button = document.getElementById(`upgrade-${index}`) as HTMLButtonElement;
+    button.disabled = crystalCount < item.cost;
+    button.innerHTML = `Buy ${item.name} (Costs ${item.cost.toFixed(2)} crystals, Provides ${item.rate} crystals/sec) - ${item.description}`;
+  });
 }
 
-// Button click event to mine crystals manually
-button.addEventListener("click", () => {
-  crystalCount++;
-  countDisplay.innerHTML = `Crystals: ${crystalCount}`;
-  checkUpgradeAvailability();
-});
-
-// Function to handle purchasing an upgrade
+// Handle purchasing an upgrade
 function purchaseUpgrade(index: number) {
   const item = availableItems[index];
   if (crystalCount >= item.cost) {
     crystalCount -= item.cost;
     incomePerSecond += item.rate;
-    item.cost *= priceMultiplier; // Increase cost after each purchase
-    item.owned++; // Track number of items owned
-    countDisplay.innerHTML = `Crystals: ${crystalCount}`;
-    updateStatusDisplay();
+    item.cost *= PRICE_MULTIPLIER;
+    item.owned++;
+    updateAllDisplays();
     checkUpgradeAvailability();
   }
 }
 
-// Add event listeners for the upgrade buttons
-availableItems.forEach((_, index) => {
-  const upgradeButton = document.getElementById(
-    `upgrade-${index}`,
-  ) as HTMLButtonElement;
-  upgradeButton.addEventListener("click", () => purchaseUpgrade(index));
-});
+// Update all game displays
+function updateAllDisplays() {
+  updateCountDisplay();
+  updateIncomeDisplay();
+  updateUpgradesOwnedDisplay();
+}
 
-// Automatically increment crystals per second
-setInterval(() => {
-  crystalCount += incomePerSecond;
+// Helper to update crystal count display
+function updateCountDisplay() {
   countDisplay.innerHTML = `Crystals: ${crystalCount.toFixed(1)}`;
+}
+
+// Helper to update income display
+function updateIncomeDisplay() {
+  incomeDisplay.innerHTML = `Crystals per second: ${incomePerSecond.toFixed(1)}`;
+}
+
+// Helper to update upgrades owned display
+function updateUpgradesOwnedDisplay() {
+  upgradesOwned.innerHTML = `Upgrades owned: ${generateOwnedString()}`;
+}
+
+// Generate a string for owned items
+function generateOwnedString(): string {
+  return availableItems.map((item) => `${item.name}s: ${item.owned}`).join(", ");
+}
+
+// Function to increment crystals based on income
+function updateCrystals() {
+  crystalCount += incomePerSecond;
+  updateCountDisplay();
   checkUpgradeAvailability();
-}, 1000); // Runs every second to add income
+}
+
+// Utility functions
+function createDisplayElement(initialText: string): HTMLParagraphElement {
+  const p = document.createElement("p");
+  p.innerHTML = initialText;
+  return p;
+}
+
+function createHeader(text: string): void {
+  const header = document.createElement("h1");
+  header.innerHTML = text;
+  app.append(header);
+}
+
+function createButton(text: string, onClick: () => void, className?: string): HTMLButtonElement {
+  const button = document.createElement("button");
+  button.innerHTML = text;
+  if (className) button.classList.add(className);
+  button.addEventListener("click", onClick);
+  return button;
+}
