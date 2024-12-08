@@ -1,5 +1,7 @@
 import "./style.css";
 
+
+
 // Item interface (added 'owned' and 'description' properties)
 interface Item {
   name: string;
@@ -28,11 +30,15 @@ const incomeDisplay = createDisplayElement("Crystals per second: 0.0");
 const upgradesOwned = createDisplayElement(`Upgrades owned: ${generateOwnedString()}`);
 
 // Game variables
+// Existing variables
 let crystalCount = 0;
 let incomePerSecond = 0;
 
 // Initialize game UI
 initializeUI();
+
+// Start updating crystals every second
+setInterval(updateCrystals, 1000); // This will run every second
 
 function initializeUI() {
   document.title = "Crystal Miner";
@@ -44,7 +50,6 @@ function initializeUI() {
 
   app.append(countDisplay, incomeDisplay, upgradesOwned);
   createUpgradeButtons();
-  setInterval(updateCrystals, 1000); // Runs every second to add income
 }
 
 // Function to handle the crystal mining button click
@@ -53,6 +58,8 @@ function handleMineCrystalClick() {
   updateCountDisplay();
   checkUpgradeAvailability();
 }
+
+
 
 // Function to dynamically create upgrade buttons
 function createUpgradeButtons() {
