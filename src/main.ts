@@ -1,7 +1,5 @@
 import "./style.css";
 
-
-
 // Item interface (added 'owned' and 'description' properties)
 interface Item {
   name: string;
@@ -13,11 +11,43 @@ interface Item {
 
 // Available items with names, costs, rates, and descriptions
 const availableItems: Item[] = [
-  { name: "Pickaxe", cost: 10, rate: 0.1, owned: 0, description: "A basic tool for mining crystals." },
-  { name: "Drill", cost: 100, rate: 2, owned: 0, description: "A powerful drill that mines crystals faster." },
-  { name: "Excavator", cost: 1000, rate: 50, owned: 0, description: "An industrial excavator for mass crystal extraction." },
-  { name: "Laser Miner", cost: 5000, rate: 200, owned: 0, description: "A high-tech laser that slices through crystal deposits like butter." },
-  { name: "Quantum Digger", cost: 20000, rate: 1000, owned: 0, description: "A futuristic tool that warps space-time to extract crystals instantly." }
+  {
+    name: "Pickaxe",
+    cost: 10,
+    rate: 0.1,
+    owned: 0,
+    description: "A basic tool for mining crystals.",
+  },
+  {
+    name: "Drill",
+    cost: 100,
+    rate: 2,
+    owned: 0,
+    description: "A powerful drill that mines crystals faster.",
+  },
+  {
+    name: "Excavator",
+    cost: 1000,
+    rate: 50,
+    owned: 0,
+    description: "An industrial excavator for mass crystal extraction.",
+  },
+  {
+    name: "Laser Miner",
+    cost: 5000,
+    rate: 200,
+    owned: 0,
+    description:
+      "A high-tech laser that slices through crystal deposits like butter.",
+  },
+  {
+    name: "Quantum Digger",
+    cost: 20000,
+    rate: 1000,
+    owned: 0,
+    description:
+      "A futuristic tool that warps space-time to extract crystals instantly.",
+  },
 ];
 
 // Constants
@@ -27,7 +57,9 @@ const PRICE_MULTIPLIER = 1.15;
 const app: HTMLDivElement = document.querySelector("#app")!;
 const countDisplay = createDisplayElement("Crystals: 0");
 const incomeDisplay = createDisplayElement("Crystals per second: 0.0");
-const upgradesOwned = createDisplayElement(`Upgrades owned: ${generateOwnedString()}`);
+const upgradesOwned = createDisplayElement(
+  `Upgrades owned: ${generateOwnedString()}`,
+);
 
 // Game variables
 // Existing variables
@@ -45,7 +77,11 @@ function initializeUI() {
   createHeader("Crystal Miner");
 
   // Create and append the main mining button
-  const mineButton = createButton("Mine Crystal!", handleMineCrystalClick, "myButton");
+  const mineButton = createButton(
+    "Mine Crystal!",
+    handleMineCrystalClick,
+    "myButton",
+  );
   app.append(mineButton);
 
   app.append(countDisplay, incomeDisplay, upgradesOwned);
@@ -59,14 +95,12 @@ function handleMineCrystalClick() {
   checkUpgradeAvailability();
 }
 
-
-
 // Function to dynamically create upgrade buttons
 function createUpgradeButtons() {
   availableItems.forEach((item, index) => {
     const button = createButton(
       `Buy ${item.name} (Costs ${item.cost} crystals, Provides ${item.rate} crystals/sec) - ${item.description}`,
-      () => purchaseUpgrade(index)
+      () => purchaseUpgrade(index),
     );
     button.id = `upgrade-${index}`;
     button.disabled = true;
@@ -77,7 +111,9 @@ function createUpgradeButtons() {
 // Check if upgrades can be purchased
 function checkUpgradeAvailability() {
   availableItems.forEach((item, index) => {
-    const button = document.getElementById(`upgrade-${index}`) as HTMLButtonElement;
+    const button = document.getElementById(
+      `upgrade-${index}`,
+    ) as HTMLButtonElement;
     button.disabled = crystalCount < item.cost;
     button.innerHTML = `Buy ${item.name} (Costs ${item.cost.toFixed(2)} crystals, Provides ${item.rate} crystals/sec) - ${item.description}`;
   });
@@ -120,7 +156,9 @@ function updateUpgradesOwnedDisplay() {
 
 // Generate a string for owned items
 function generateOwnedString(): string {
-  return availableItems.map((item) => `${item.name}s: ${item.owned}`).join(", ");
+  return availableItems
+    .map((item) => `${item.name}s: ${item.owned}`)
+    .join(", ");
 }
 
 // Function to increment crystals based on income
@@ -143,7 +181,11 @@ function createHeader(text: string): void {
   app.append(header);
 }
 
-function createButton(text: string, onClick: () => void, className?: string): HTMLButtonElement {
+function createButton(
+  text: string,
+  onClick: () => void,
+  className?: string,
+): HTMLButtonElement {
   const button = document.createElement("button");
   button.innerHTML = text;
   if (className) button.classList.add(className);
