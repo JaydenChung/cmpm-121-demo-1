@@ -63,25 +63,25 @@ const upgradesOwned = createDisplayElement(
 
 // Game variables
 // Existing variables
+// Existing variables
 let crystalCount = 0;
 let incomePerSecond = 0;
+
+// Timing variables
+let lastUpdateTime: number = 0;
 
 // Initialize game UI
 initializeUI();
 
-// Start updating crystals every second
-setInterval(updateCrystals, 1000); // This will run every second
+// Start the animation loop
+requestAnimationFrame(gameLoop);
 
 function initializeUI() {
   document.title = "Crystal Miner";
   createHeader("Crystal Miner");
 
   // Create and append the main mining button
-  const mineButton = createButton(
-    "Mine Crystal!",
-    handleMineCrystalClick,
-    "myButton",
-  );
+  const mineButton = createButton("Mine Crystal!", handleMineCrystalClick, "myButton");
   app.append(mineButton);
 
   app.append(countDisplay, incomeDisplay, upgradesOwned);
@@ -94,6 +94,26 @@ function handleMineCrystalClick() {
   updateCountDisplay();
   checkUpgradeAvailability();
 }
+
+// The main game loop
+function gameLoop(timestamp: number) {
+  // Calculate time since the last frame
+  const deltaTime = (timestamp - lastUpdateTime) / 1000; // Convert from ms to seconds
+
+  // Update the crystal count based on income per second
+  crystalCount += incomePerSecond * deltaTime;
+
+  // Update the display
+  updateCountDisplay();
+  checkUpgradeAvailability();
+
+  // Store the current timestamp for the next loop
+  lastUpdateTime = timestamp;
+
+  // Request the next animation frame
+  requestAnimationFrame(gameLoop);
+}
+
 
 // Function to dynamically create upgrade buttons
 function createUpgradeButtons() {
@@ -161,12 +181,6 @@ function generateOwnedString(): string {
     .join(", ");
 }
 
-// Function to increment crystals based on income
-function updateCrystals() {
-  crystalCount += incomePerSecond;
-  updateCountDisplay();
-  checkUpgradeAvailability();
-}
 
 // Utility functions
 function createDisplayElement(initialText: string): HTMLParagraphElement {
